@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025081701
+      author: sabin
+      changes:
+        - createTable:
+            tableName: payment_session
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+
+              # Identifiers
+              - column: { name: order_id, type: VARCHAR, constraints: { unique: true } }
+              - column: { name: session_id, type: VARCHAR, constraints: { unique: true } }
+              - column: { name: intent_id, type: VARCHAR, constraints: { unique: true } }
+              - column: { name: customer_id, type: VARCHAR, constraints: { unique: true } }
+
+              # Statuses and URL
+              - column: { name: intent_status, type: VARCHAR }
+              - column: { name: payment_status, type: VARCHAR }
+              - column: { name: session_status, type: VARCHAR }
+              - column: { name: session_url, type: TEXT }
+
+              # Financial info
+              - column: { name: amount, type: BIGINT }
+              - column: { name: currency, type: VARCHAR }
+              - column: { name: completed_at, type: TIMESTAMP WITH TIME ZONE }
+
+              # User info
+              - column: { name: email, type: VARCHAR }
+              - column: { name: username, type: VARCHAR }
+              - column: { name: message, type: TEXT }
+              - column: { name: notes, type: TEXT }
+
+              # Charge details
+              - column: { name: charge_id, type: VARCHAR, constraints: { unique: true } }
+              - column: { name: charge_status, type: VARCHAR }
+              - column: { name: is_disputed, type: BOOLEAN }
+              - column: { name: is_refunded, type: BOOLEAN }
+              - column: { name: amount_refunded, type: BIGINT }
+              - column: { name: payment_methods, type: JSONB }
+
+              # Audit timestamps
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: { nullable: false } }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }

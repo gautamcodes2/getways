@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:17.6
+    container_name: getways-db
+    restart: always
+    environment:
+      POSTGRES_DB: getways
+      POSTGRES_USER: sabin
+      POSTGRES_PASSWORD: secretpassword1
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  stripe-cli:
+    image: stripe/stripe-cli
+    volumes:
+      - ./start-stripe.sh:/app/start-stripe.sh
+      - ~/.config/stripe:/root/.config/stripe
+      - webhook-secret:/webhook-secret
+    entrypoint: [ "sh", "/app/start-stripe.sh" ]
+
+volumes:
+  postgres_data:
+  webhook-secret:
+

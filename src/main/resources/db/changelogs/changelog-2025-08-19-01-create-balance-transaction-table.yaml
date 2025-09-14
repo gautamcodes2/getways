@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2025081901
+      author: sabin
+      changes:
+        - createTable:
+            tableName: balance_transaction
+            columns:
+              - column: { name: id, type: UUID, constraints: { primaryKey: true, nullable: false } }
+              - column: { name: created_at, type: TIMESTAMP WITH TIME ZONE, constraints: { nullable: false } }
+              - column: { name: updated_at, type: TIMESTAMP WITH TIME ZONE }
+
+              - column: { name: balance_transaction_id, type: VARCHAR }
+              - column: { name: charge_id, type: VARCHAR, constraints: { unique: true } }
+              - column: { name: payment_amount, type: BIGINT }
+              - column: { name: stripe_fee, type: BIGINT }
+              - column: { name: net_amount, type: BIGINT }
+              - column: { name: completed_at, type: TIMESTAMP WITH TIME ZONE }

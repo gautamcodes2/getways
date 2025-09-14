@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: getways
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/getways?TimeZone=Asia/Kathmandu
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  liquibase:
+    change-log: classpath:db/changelog-master/db.changelog-master.yaml
+    enabled: true
+    drop-first: false
+    test-rollback-on-update: false
+    contexts: dev
+    clear-checksums: false
+
+stripe:
+  api:
+    secret-key: ${STRIPE_SECRET_KEY}
+    publishable-key: ${STRIPE_PUBLISHABLE_KEY}
+    signing-secret: ${STRIPE_SIGNING_SECRET}
