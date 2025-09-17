@@ -42,7 +42,8 @@ public class PaymentRequestService {
                         entity.getPaymentStatus(),
                         false,
                         entity.getNotes(),
-                        entity.getMessage()
+                        entity.getMessage(),
+                        entity.getCreatedAt().toString()
                 ))
                 .toList();
     }

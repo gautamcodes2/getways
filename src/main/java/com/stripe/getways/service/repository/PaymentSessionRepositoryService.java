@@ -68,7 +68,7 @@ public class PaymentSessionRepositoryService {
         return paymentSessionRepository.save(sessionEntity);
     }
 
-    @Transactional
+    @Transactional(rollbackOn = Exception.class)
     public PaymentSessionEntity persistSession(Session session) {
         String sessionId = session.getId();
         String intentId = session.getPaymentIntent();

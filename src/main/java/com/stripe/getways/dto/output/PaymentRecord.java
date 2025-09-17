@@ -10,10 +10,11 @@ public record PaymentRecord(
         String paymentStatus,
         boolean credited,
         String note,
-        String message
+        String message,
+        String receivedAt
 ) {
     public PaymentRecord(String orderId, String email, String username, BigDecimal amount,
-                         String paymentStatus, boolean credited, String note, String message) {
+                         String paymentStatus, boolean credited, String note, String message, String receivedAt) {
         this.orderId = orderId;
         this.email = email;
         this.username = username;
@@ -22,6 +23,7 @@ public record PaymentRecord(
         this.credited = credited;
         this.note = note;
         this.message = message;
+        this.receivedAt = receivedAt;
     }
 }
 
