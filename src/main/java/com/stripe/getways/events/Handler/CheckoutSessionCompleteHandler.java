@@ -25,6 +25,6 @@ public class CheckoutSessionCompleteHandler implements StripeEventHandler {
         Session session = (Session) event.getDataObjectDeserializer().getObject()
                 .orElseThrow(() -> new IllegalStateException("Stripe session object is null for event type: " + event.getType()));
 
-        paymentSessionRepositoryService.persistSession(session);
+        var savedEntity = paymentSessionRepositoryService.persistSession(session);
     }
 }

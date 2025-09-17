@@ -29,7 +29,7 @@ public class PaymentSessionRepositoryService {
         this.paymentSessionRepository = paymentSessionRepository;
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public PaymentSessionEntity persistSession(Session session, @Valid PaymentRequest requestInput) {
 
         // Extract fields from request input
@@ -68,33 +68,31 @@ public class PaymentSessionRepositoryService {
         return paymentSessionRepository.save(sessionEntity);
     }
 
-    @Transactional(rollbackOn = Exception.class)
-    public void persistSession(Session session) {
-
-        final String sessionId = session.getId();
-        final String intentId = session.getPaymentIntent();
-        final String paymentStatus = session.getPaymentStatus();
-        final String sessionStatus = session.getStatus();
-        final String sessionUrl = Optional.ofNullable(session.getUrl())
+    @Transactional
+    public PaymentSessionEntity persistSession(Session session) {
+        String sessionId = session.getId();
+        String intentId = session.getPaymentIntent();
+        String paymentStatus = session.getPaymentStatus();
+        String sessionStatus = session.getStatus();
+        String sessionUrl = Optional.ofNullable(session.getUrl())
                 .orElse("Not Available, Session completed");
 
-        // Fetch existing entity
-        paymentSessionRepository.findBySessionId(sessionId).ifPresent(entity -> {
-            entity.setSessionUrl(sessionUrl);
-            entity.setPaymentStatus(paymentStatus);
-            entity.setSessionStatus(sessionStatus);
-
-            EntityUtils.setIfAbsent(entity::getIntentId, entity::setIntentId, intentId);
-            paymentSessionRepository.save(entity);
-        });
+        return paymentSessionRepository.findBySessionId(sessionId)
+                .map(entity -> {
+                    entity.setSessionUrl(sessionUrl);
+                    entity.setPaymentStatus(paymentStatus);
+                    entity.setSessionStatus(sessionStatus);
+                    EntityUtils.setIfAbsent(entity::getIntentId, entity::setIntentId, intentId);
+                    return paymentSessionRepository.save(entity); // ensures flush and returns updated entity
+                })
+                .orElse(null);
     }
 
-
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public void persistPaymentIntent(PaymentIntent intent) {
-        final String intentId = intent.getId();
-        final String chargeId = intent.getLatestCharge();
-        final String orderId = intent.getMetadata().get("orderId");
+        String intentId = intent.getId();
+        String chargeId = intent.getLatestCharge();
+        String orderId = intent.getMetadata().get("orderId");
 
         // 🔎 Null-safe repository lookup
         PaymentSessionEntity entity = Optional.ofNullable(intentId)
@@ -116,7 +114,7 @@ public class PaymentSessionRepositoryService {
         EntityUtils.setIfAbsent(entity::getChargeId, entity::setChargeId, chargeId);
 
         // 💡 Update status & timestamps
-        final String status = intent.getStatus();
+        String status = intent.getStatus();
         entity.setIntentStatus(status);
 
         if ("succeeded".equals(status) || "canceled".equals(status)) {
@@ -165,7 +163,6 @@ public class PaymentSessionRepositoryService {
 
         paymentSessionRepository.save(entity);
     }
-
 
     public List<PaymentSessionEntity> findAll() {
         return paymentSessionRepository.findAll(Sort.by(Sort.Direction.DESC, "createdAt"));
