@@ -1,6 +1,7 @@
 package com.stripe.getways.service.repository;
 
 import com.stripe.getways.dto.input.PaymentRequest;
+import com.stripe.getways.dto.output.PaymentRecord;
 import com.stripe.getways.model.EntityUtils;
 import com.stripe.getways.model.PaymentSessionEntity;
 import com.stripe.getways.repository.PaymentSessionRepository;
@@ -12,6 +13,8 @@ import com.stripe.model.StripeObject;
 import com.stripe.model.checkout.Session;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 

@@ -4,7 +4,7 @@
 mkdir -p /webhook-secret
 
 # Start fresh webhook listener, capture secret
-stripe listen --forward-to https://312b6b5960ce.ngrok-free.app/api/payment/webhook 2>&1 | \
+stripe listen --forward-to https://3a777faa8271.ngrok-free.app//api/payment/webhook 2>&1 | \
 tee /dev/stderr | \
 grep -o 'whsec_[a-zA-Z0-9]*' | \
 head -1 > /webhook-secret/secret
