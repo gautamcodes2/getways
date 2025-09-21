@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.stripe.getways.utility.StringUtil.safeTrim;
+
 @RestController
 @RequestMapping("/api/payment")
 @Data
@@ -33,14 +35,12 @@ public class PaymentRecordController {
             Pageable pageable,
             PagedResourcesAssembler<PaymentRecord> assembler
     ) {
-        // Fetch Page<PaymentRecord> from service
         Page<PaymentRecord> paymentPage = paymentRequestService.getPayments(
                 pageable.getPageNumber(),
                 pageable.getPageSize(),
                 username,
                 email
         );
-
         return assembler.toModel(paymentPage);
     }
 }

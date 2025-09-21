@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static com.stripe.getways.utility.StringUtil.safeTrim;
+
 @Service
 public class PaymentRequestService {
     private final PaymentSessionRepositoryService paymentSessionRepositoryService;
@@ -56,20 +58,24 @@ public class PaymentRequestService {
     }
 
     public Page<PaymentRecord> getPayments(int page, int size, String username, String email) {
+
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         Page<PaymentSessionEntity> entityPage;
 
+        var normalizedUsername = safeTrim(username);
+        var normalizedEmail = safeTrim(email);
+
         // Determine which repository method to call
-        boolean hasUsername = username != null && !username.isBlank();
-        boolean hasEmail = email != null && !email.isBlank();
+        boolean hasUsername = normalizedUsername != null;
+        boolean hasEmail = normalizedEmail != null;
 
         if (hasUsername && hasEmail) {
             entityPage = paymentSessionRepository
-                    .findByUsernameContainingIgnoreCaseAndEmailContainingIgnoreCase(username, email, pageable);
+                    .findByUsernameContainingIgnoreCaseAndEmailContainingIgnoreCase(normalizedUsername, normalizedEmail, pageable);
         } else if (hasUsername) {
-            entityPage = paymentSessionRepository.findByUsernameContainingIgnoreCase(username, pageable);
+            entityPage = paymentSessionRepository.findByUsernameContainingIgnoreCase(normalizedUsername, pageable);
         } else if (hasEmail) {
-            entityPage = paymentSessionRepository.findByEmailContainingIgnoreCase(email, pageable);
+            entityPage = paymentSessionRepository.findByEmailContainingIgnoreCase(normalizedEmail, pageable);
         } else {
             entityPage = paymentSessionRepository.findAll(pageable);
         }
