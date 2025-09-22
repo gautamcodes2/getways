@@ -19,9 +19,6 @@ public class StripeClient {
 
     public Session createCheckout(PaymentRequest paymentRequest) throws StripeException {
 
-        String successUrl = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Labrador_Retriever_portrait.jpg/330px-Labrador_Retriever_portrait.jpg";
-        String cancelUrl = "https://images.squarespace-cdn.com/content/v1/607f89e638219e13eee71b1e/1684821560422-SD5V37BAG28BURTLIXUQ/michael-sum-LEpfefQf4rU-unsplash.jpg?format=2500w";
-
         var expires = Instant.now().getEpochSecond() + 1800;
         System.out.println("Expires: " + expires);
         PaymentIntentData paymentIntentData = PaymentIntentData.builder()
@@ -33,8 +30,8 @@ public class StripeClient {
                 .setPaymentIntentData(paymentIntentData)
                 .setCustomerEmail(paymentRequest.getEmail())
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl(successUrl)
-                .setCancelUrl(cancelUrl)
+                .setSuccessUrl(paymentRequest.getSuccessUrl())
+                .setCancelUrl(paymentRequest.getFailedUrl())
                 .addAllPaymentMethodType(
                         List.of(SessionCreateParams.PaymentMethodType.CASHAPP,
                                 SessionCreateParams.PaymentMethodType.CARD,

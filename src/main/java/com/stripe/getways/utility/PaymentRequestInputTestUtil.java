@@ -18,8 +18,11 @@ public class PaymentRequestInputTestUtil {
                 .setScale(2, RoundingMode.HALF_UP);
         String username = "user" + ThreadLocalRandom.current().nextInt(100, 999);
         String notes = "Test order note " + ThreadLocalRandom.current().nextInt(1, 100);
+        String successUrl = " ";
+        String failedUrl = " ";
 
-        return new PaymentRequest(orderId, email, amount, username, notes);
+
+        return new PaymentRequest(orderId, email, amount, username, notes, successUrl, failedUrl);
     }
 }
 

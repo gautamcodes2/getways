@@ -15,9 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import static com.stripe.getways.utility.StringUtil.safeTrim;
 
 @Service
@@ -38,23 +35,6 @@ public class PaymentRequestService {
         var checkoutSession = stripeClient.createCheckout(requestInput);
         return paymentSessionRepositoryService
                 .persistSession(checkoutSession, requestInput);
-    }
-
-    public List<PaymentRecord> getAllPaymentRecords() {
-        return paymentSessionRepositoryService.findAll()
-                .stream()
-                .map(entity -> new PaymentRecord(
-                        entity.getOrderId(),
-                        entity.getEmail(),
-                        entity.getUsername(),
-                        BigDecimal.valueOf(entity.getAmount()).movePointLeft(2),
-                        entity.getPaymentStatus(),
-                        false,
-                        entity.getNotes(),
-                        entity.getMessage(),
-                        entity.getCreatedAt().toString()
-                ))
-                .toList();
     }
 
     public Page<PaymentRecord> getPayments(int page, int size, String username, String email) {
@@ -79,7 +59,6 @@ public class PaymentRequestService {
         } else {
             entityPage = paymentSessionRepository.findAll(pageable);
         }
-
         return entityPage.map(PaymentRecordMapper::toDto);
     }
 }
